@@ -187,11 +187,17 @@ const filterDataForNMonths = (n: number, data: StockData[]): StockData[] => {
   const endDate = new Date();
   const startDate = getLastNMonthsDate(n);
 
-  return data.filter((item) => {
+  const filteredData = data.filter((item) => {
     const itemDate = new Date(item.date);
     return itemDate >= startDate && itemDate <= endDate;
   });
+
+  if(filteredData.length!)
+  filteredData.splice(-1, 1);
+
+  return filteredData;
 };
+
 
 export const filterData = (
   selectedOption: CustomSelectProps["options"][0]["value"],
