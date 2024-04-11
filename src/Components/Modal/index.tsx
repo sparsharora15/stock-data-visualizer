@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import { RxCross2 } from "react-icons/rx";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import Loader from "../Loader";
 
 interface ModalProps {
   modalIsOpen: boolean;
-  initial: boolean;
   symbolName: string; // Add symbolName prop
   closeModal: () => void;
   handleSubmit: () => void;
+  loading:boolean
   onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void; // Add input change handler prop
 }
 
@@ -16,8 +20,8 @@ const CustomModal = ({
   closeModal,
   symbolName,
   onInputChange,
-  initial,
-  handleSubmit
+  loading,
+  handleSubmit,
 }: ModalProps) => {
   const customStyles = {
     content: {
@@ -32,7 +36,6 @@ const CustomModal = ({
   };
   const [isSymbolNameFilled, setIsSymbolNameFilled] = useState(false);
 
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onInputChange(event);
     setIsSymbolNameFilled(event.target.value.trim() !== "");
@@ -46,40 +49,34 @@ const CustomModal = ({
         style={customStyles}
         shouldCloseOnOverlayClick={false}
       >
-        {!initial && (
+        <div className="flex flex-col gap-4">
           <div className="w-full flex justify-end">
             <RxCross2
-              className={`cursor-pointer ${
-                isSymbolNameFilled ? "" : "opacity-50 pointer-events-none" // Disable close button if symbolName is not filled
-              }`}
-              onClick={isSymbolNameFilled ? closeModal : undefined}
+              className={`cursor-pointer`}
+              onClick={closeModal}
             />
           </div>
-        )}
-        <div>
-          <label
-            htmlFor="symbol"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          <div className="flex flex-col gap-4">
+            <Label htmlFor="symbol" >
+              Symbol Name
+            </Label>
+            <Input
+              type="text"
+              id="symbol"
+              placeholder="Symbol Name"
+              value={symbolName}
+              onChange={handleInputChange}
+            />
+          </div>
+          <Button
+            variant="outline"
+            className="text-white bg-primary"
+            onClick={handleSubmit}
+            disabled={!isSymbolNameFilled} // Disable submit Button if symbolName is not filled
           >
-            Symbol Name
-          </label>
-          <input
-            type="text"
-            id="symbol"
-            className="bg-gray-50 border mb-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="Symbol Name"
-            value={symbolName}
-            onChange={handleInputChange}
-            required
-          />
+            {loading?<Loader/>:"Submit"}
+          </Button>
         </div>
-        <button
-          className="text-white w-[20%] bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm py-2.5 text-center"
-          onClick={handleSubmit}
-          disabled={!isSymbolNameFilled} // Disable submit button if symbolName is not filled
-        >
-          Submit
-        </button>
       </Modal>
     </>
   );

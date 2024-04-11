@@ -120,7 +120,7 @@ const LineChart = ({ data }: LineChartProps) => {
     },
   };
   const chartData = {
-    labels: data.map((data) => data?.date.toString()),
+    labels: data.map((data) => data?.date?.toString()),
 
     datasets: [
       {

@@ -1,11 +1,13 @@
+import { JWTSECRET } from "./contants";
 import {
   ApiResponse,
   ChartData,
   CustomSelectProps,
+  FilteredData,
   StockData,
   filteredData,
 } from "./interfaces";
-
+import * as jose from "jose";
 export const barChartOption = {
   responsive: true,
   plugins: {
@@ -48,71 +50,36 @@ export const barChartOption = {
 };
 export const columnData = [
   {
-    headerName: "Adjusted Close",
-    field: "adjustedClose",
-    headerClass: "ag-header-custom",
-    tooltipField: "Adjusted Close",
-    flex: 1,
-    sortable: false,
-    pinned: "left",
+    header: "Adjusted Close",
+    accessorKey: "adjustedClose",
   },
   {
-    headerName: "Close",
-    field: "close",
-    headerClass: "ag-header-custom",
-    tooltipField: "Close",
-    flex: 1,
-    sortable: false,
-    // pinned: "left",
+    header: "Close",
+    accessorKey: "close",
   },
   {
-    headerName: "Date",
-    field: "date",
-    tooltipField: "Date",
-    headerClass: "ag-header-custom",
-    flex: 1,
-    sortable: false,
+    header: "Date",
+    accessorKey: "date",
   },
   {
-    headerName: "Dividend Amount",
-    field: "dividendAmount",
-    headerClass: "ag-header-custom",
-    tooltipField: "Dividend Amount",
-    flex: 1,
-    sortable: false,
+    header: "Dividend Amount",
+    accessorKey: "dividendAmount",
   },
   {
-    headerName: "High",
-    field: "high",
-    headerClass: "ag-header-custom",
-    tooltipField: "High",
-    flex: 1,
-    sortable: false,
+    header: "High",
+    accessorKey: "high",
   },
   {
-    headerName: "Low",
-    field: "low",
-    headerClass: "ag-header-custom",
-    tooltipField: "Low",
-    flex: 1,
-    sortable: false,
+    header: "Low",
+    accessorKey: "low",
   },
   {
-    headerName: "Open",
-    field: "open",
-    headerClass: "ag-header-custom",
-    tooltipField: "open",
-    flex: 1,
-    sortable: false,
+    header: "Open",
+    accessorKey: "open",
   },
   {
-    headerName: "volume",
-    field: "volume",
-    headerClass: "ag-header-custom",
-    tooltipField: "Volume",
-    // width:
-    flex: 1,
-    sortable: false,
+    header: "volume",
+    accessorKey: "volume",
   },
 ];
 export const CustomSelectOptions = [
@@ -164,18 +131,25 @@ export const generateChartData = (data: StockData[]): ChartData => {
   };
 };
 
-interface FilteredData {
-  filteredData: StockData[];
-  maxHigh: number;
-  maxLow: number;
-  performance: number;
-}
 export interface CardsData {
   maxHigh: number;
   maxLow: number;
   performance: number;
 }
+export const decodeToken = async () => {
+  try {
+    let token = localStorage.getItem("authToken");
 
+    const deCodedToken = await jose.jwtVerify(
+      token as string,
+      new TextEncoder().encode(JWTSECRET)
+    );
+    return { isDecode: true, deCodedToken: deCodedToken };
+  } catch (e) {
+    console.warn(e);
+    return { isDecode: false };
+  }
+};
 const getLastNMonthsDate = (n: number): Date => {
   const currentDate = new Date();
   const result = new Date(currentDate);
@@ -192,12 +166,10 @@ const filterDataForNMonths = (n: number, data: StockData[]): StockData[] => {
     return itemDate >= startDate && itemDate <= endDate;
   });
 
-  if(filteredData.length!)
-  filteredData.splice(-1, 1);
+  if (filteredData.length!) filteredData.splice(-1, 1);
 
   return filteredData;
 };
-
 
 export const filterData = (
   selectedOption: CustomSelectProps["options"][0]["value"],
@@ -237,6 +209,15 @@ export const filterData = (
       ? ((maxHigh - maxLow) / maxLow) * 100
       : 0;
 
-
   return { filteredData, maxHigh, maxLow, performance };
+};
+export const classNames = (...className: string[]) => {
+  className.filter(Boolean).join(" ");
+};
+export const getAuthorizationConfig = (token: string) => {
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 };

@@ -100,10 +100,11 @@ const Performance = ({ performance }: { performance: number }) => {
 };
 
 const Cards = ({ apperance, cardsData, loading }: CardProps) => {
+  console.log(loading)
   return (
     <>
-      <div className="cursor-pointer lg:w-[20%]   flex p-1 bg-white w-[50%] rounded-1 shadow-custom">
-        {!loading ? <Loader /> : renderCards(apperance, cardsData)}
+      <div className="cursor-pointer lg:w-[20%]   flex p-[1rem] bg-white w-[50%] rounded shadow-custom">
+        {loading ? <Loader /> : renderCards(apperance, cardsData)}
       </div>
     </>
   );

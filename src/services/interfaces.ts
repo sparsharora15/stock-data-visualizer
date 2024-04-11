@@ -29,6 +29,12 @@ export interface CustomSelectProps {
     value: string;
   }[];
 }
+export interface FilteredData {
+  filteredData: StockData[];
+  maxHigh: number;
+  maxLow: number;
+  performance: number;
+}
 export interface StockData {
   date: string;
   open: string;
@@ -48,12 +54,22 @@ export interface ChartData {
   }[];
 }
 export interface filteredData {
-  adjustedClose: string |number ;
-  close:string |number ;
-  date:string  ;
-  dividendAmount: string |number;
-  high: string |number;
-  low:string |number ;
-  open: string |number;
-  volume: string |number
+  adjustedClose: string | number;
+  close: string | number;
+  date: string;
+  dividendAmount: string | number;
+  high: string | number;
+  low: string | number;
+  open: string | number;
+  volume: string | number;
+}
+export interface PageProps {
+  Components: JSX.Element;
+}
+export interface StocksRowData {
+  _id: string;
+  symbol: string;
+  maxHigh: number | string;
+  maxLow: number | string;
+  performance: number | string;
 }

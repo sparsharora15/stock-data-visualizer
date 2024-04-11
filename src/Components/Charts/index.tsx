@@ -19,7 +19,7 @@ const renderCharts = (type: "Bar" | "Line", data: StockData[]) => {
   }
 };
 const Charts = ({ type, data, loading }: ChartsProps) => (
-  <>{!loading ? <Loader /> : renderCharts(type, data)}</>
+  <>{loading ? <Loader /> : renderCharts(type, data)}</>
 );
 
 export default Charts;

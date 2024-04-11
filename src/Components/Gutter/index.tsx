@@ -1,17 +1,12 @@
 import React from "react";
+import { RoutesProps } from "react-router-dom";
 
 interface GutterProps {
-  left?: boolean;
-  right?: boolean;
-  children: JSX.Element;
+  children: JSX.Element | React.ReactElement | null;
 }
 
-const Gutter: React.FC<GutterProps> = ({
-  left,
-  right,
-  children,
-}: GutterProps) => {
-  return <div className='bg-primary px-5 py-2'>{children}</div>;
+const Gutter: React.FC<GutterProps> = ({ children }: GutterProps) => {
+  return <div className=" px-5 py-[2.2rem] bg-main">{children}</div>;
 };
 
 export default Gutter;
